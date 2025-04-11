@@ -1,0 +1,692 @@
+:root {
+    --primary-color: #ff3c00;
+    --secondary-color: #0059ff;
+    --background-color: #f9f9f9;
+    --cell-bg: #dddddd;
+    --cell-revealed: #ffffff;
+    --text-color: #000000;
+    --mine-color: #ff0000;
+    --flag-color: #ffcc00;
+    --border-color: #000000;
+    --shadow-offset: 4px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Courier New', monospace;
+}
+
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    min-height: 100vh;
+    padding: 20px;
+    overflow-x: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+#game-container {
+    text-align: center;
+    max-width: 800px;
+    width: 100%;
+}
+
+header {
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.title {
+    font-size: 3rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    color: var(--primary-color);
+    background-color: var(--background-color);
+    padding: 15px;
+    border: 5px solid var(--border-color);
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 var(--border-color);
+    display: inline-block;
+    transform: rotate(-2deg);
+    margin-top: 10px;
+}
+
+h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.menu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+}
+
+h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    border-bottom: 4px solid var(--border-color);
+    padding-bottom: 5px;
+}
+
+h3 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+}
+
+.grid-options {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.grid-option {
+    padding: 15px 25px;
+    font-size: 1.3rem;
+    font-weight: bold;
+    background-color: var(--secondary-color);
+    color: white;
+    border: 3px solid var(--border-color);
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 var(--border-color);
+    cursor: pointer;
+    transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.grid-option:hover {
+    transform: translateY(-2px);
+}
+
+.grid-option:active {
+    transform: translateX(var(--shadow-offset)) translateY(var(--shadow-offset));
+    box-shadow: 0 0 0 var(--border-color);
+}
+
+.instructions {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 3px solid var(--border-color);
+    background-color: white;
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 var(--border-color);
+}
+
+.instructions ul {
+    list-style-type: square;
+    margin-left: 20px;
+}
+
+.instructions li {
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+}
+
+#menu button {
+    margin: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    cursor: pointer;
+    border: 2px solid var(--border-color);
+    background: none;
+    color: var(--text-color);
+}
+
+#menu button:hover {
+    background-color: var(--border-color);
+    color: var(--cell-revealed);
+}
+
+#grid {
+    display: grid;
+    gap: 1px;
+    background-color: var(--border-color);
+    margin-top: 1rem;
+}
+
+.grid-cell {
+    width: 30px;
+    height: 30px;
+    background-color: var(--cell-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    user-select: none;
+    border: none;
+    transition: background-color 0.15s ease, transform 0.15s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Hover effect */
+.grid-cell.hover:not(.revealed):not(.flag) {
+    background-color: #ddd;
+    transform: scale(0.95);
+}
+
+/* Click animation */
+.grid-cell.cell-clicked {
+    transform: scale(0.9);
+}
+
+/* Mobile touch feedback */
+.grid-cell.touch-active {
+    background-color: #b8b8b8;
+    transform: scale(0.95);
+}
+
+/* Flag animation */
+.grid-cell.flag-animation {
+    animation: flag-pulse 0.3s ease;
+}
+
+@keyframes flag-pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(0.9); }
+    100% { transform: scale(1); }
+}
+
+/* Reveal animation */
+.grid-cell.reveal-animation {
+    animation: reveal 0.3s ease;
+}
+
+@keyframes reveal {
+    0% { 
+        transform: scale(0.8);
+        opacity: 0.5;
+    }
+    100% { 
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Exploded mine highlight */
+.grid-cell.exploded {
+    background-color: #ff5252;
+    animation: explode 0.5s ease;
+}
+
+@keyframes explode {
+    0% { transform: scale(1); background-color: #fff; }
+    50% { transform: scale(1.1); background-color: #ff5252; }
+    100% { transform: scale(1); background-color: #ff5252; }
+}
+
+/* Grid animations */
+#grid.victory-animation {
+    animation: victory 1s ease;
+}
+
+@keyframes victory {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.03); }
+    100% { transform: scale(1); }
+}
+
+#grid.shake-animation {
+    animation: shake 0.5s ease;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-5px); }
+    40%, 80% { transform: translateX(5px); }
+}
+
+/* Flag toggle button pulse */
+.button-pulse {
+    animation: button-pulse 0.3s ease;
+}
+
+@keyframes button-pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+/* Flag mode cursor */
+#grid.flag-mode {
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><text y="16" font-size="16">🚩</text></svg>'), auto;
+}
+
+/* Flag toggle button styling */
+#flag-toggle {
+    position: relative;
+    border: 3px solid var(--border-color);
+    border-radius: 8px;
+    padding: 10px 16px;
+    margin: 10px auto;
+    font-size: 1.2rem;
+    font-weight: bold;
+    background-color: white;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    max-width: 200px;
+}
+
+#flag-toggle.active {
+    background-color: #ffecb3;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 8px rgba(255, 193, 7, 0.5);
+}
+
+#flag-toggle::after {
+    content: "";
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #ccc;
+    transition: all 0.3s ease;
+    margin-left: 8px;
+}
+
+#flag-toggle.active::after {
+    background-color: var(--primary-color);
+}
+
+/* Game Over Modal Styling */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: var(--background-color);
+    padding: 30px;
+    border: 5px solid var(--border-color);
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 var(--border-color);
+    max-width: 500px;
+    width: 90%;
+    text-align: center;
+    position: relative;
+    animation: modal-appear 0.3s ease-out;
+}
+
+@keyframes modal-appear {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.modal h2 {
+    color: var(--primary-color);
+    margin-bottom: 15px;
+    font-size: 2rem;
+}
+
+.modal p {
+    margin-bottom: 20px;
+    font-size: 1.2rem;
+}
+
+.score-submission {
+    margin: 20px 0;
+    padding: 15px;
+    border: 2px solid var(--border-color);
+    background-color: white;
+}
+
+#final-score {
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 15px 0;
+}
+
+.input-group label {
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+#player-name {
+    padding: 10px;
+    font-size: 1.5rem;
+    text-align: center;
+    text-transform: uppercase;
+    border: 3px solid var(--border-color);
+    width: 100px;
+    margin: 0 auto;
+    background-color: white;
+}
+
+.submit-button, .restart-button {
+    padding: 12px 20px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    background-color: var(--secondary-color);
+    color: white;
+    border: 3px solid var(--border-color);
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 var(--border-color);
+    cursor: pointer;
+    transition: transform 0.1s, box-shadow 0.1s;
+    margin: 10px auto;
+    display: block;
+    min-width: 200px;
+}
+
+.submit-button:hover, .restart-button:hover {
+    transform: translateY(-2px);
+}
+
+.submit-button:active, .restart-button:active {
+    transform: translateX(var(--shadow-offset)) translateY(var(--shadow-offset));
+    box-shadow: 0 0 0 var(--border-color);
+}
+
+.submit-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+.modal-leaderboard {
+    margin-top: 20px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.grid-cell.revealed {
+    background-color: var(--cell-revealed);
+}
+
+.grid-cell.mine {
+    background-color: var(--mine-color);
+    position: relative;
+}
+
+.grid-cell.mine::after {
+    content: "💣";
+    font-size: 18px;
+}
+
+.grid-cell.flag {
+    background-color: var(--cell-bg);
+    color: var(--flag-color);
+}
+
+.grid-cell.wrong-flag {
+    background-color: var(--mine-color);
+    position: relative;
+}
+
+.grid-cell.wrong-flag::after {
+    content: "❌";
+    font-size: 18px;
+}
+
+/* Mine number colors */
+.grid-cell.mines-1 { color: #2196F3; font-weight: bold; }
+.grid-cell.mines-2 { color: #4CAF50; font-weight: bold; }
+.grid-cell.mines-3 { color: #F44336; font-weight: bold; }
+.grid-cell.mines-4 { color: #673AB7; font-weight: bold; }
+.grid-cell.mines-5 { color: #FF9800; font-weight: bold; }
+.grid-cell.mines-6 { color: #009688; font-weight: bold; }
+.grid-cell.mines-7 { color: #795548; font-weight: bold; }
+.grid-cell.mines-8 { color: #607D8B; font-weight: bold; }
+
+#info {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1rem;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .title {
+        font-size: 2rem;
+        padding: 10px;
+        border-width: 4px;
+    }
+
+    .game-header {
+        flex-direction: column;
+        gap: 5px;
+    }
+    
+    .grid-cell {
+        width: 32px;
+        height: 32px;
+        font-size: 14px;
+    }
+    
+    .grid-option {
+        padding: 15px 20px;
+        font-size: 1.1rem;
+    }
+
+    #flag-toggle {
+        margin: 15px auto;
+        padding: 12px 20px;
+        font-size: 1.3rem;
+        width: 80%;
+        max-width: 250px;
+    }
+
+    /* Mobile instructions */
+    .mobile-instructions {
+        background: rgba(255, 255, 255, 0.9);
+        padding: 10px;
+        border-radius: 8px;
+        margin: 10px auto;
+        font-size: 0.9rem;
+        border: 2px solid var(--border-color);
+        display: none;
+    }
+
+    .mobile-instructions.show {
+        display: block;
+    }
+
+    /* Improved modal for mobile */
+    .modal-content {
+        padding: 20px 15px;
+        width: 95%;
+        max-width: 400px;
+    }
+
+    .modal h2 {
+        font-size: 1.6rem;
+        margin-bottom: 10px;
+    }
+
+    .modal p {
+        font-size: 1rem;
+        margin-bottom: 15px;
+    }
+
+    .score-submission {
+        padding: 10px;
+        margin: 15px 0;
+    }
+
+    .input-group {
+        gap: 5px;
+        margin: 10px 0;
+    }
+
+    .input-group label {
+        font-size: 0.9rem;
+    }
+
+    #player-name {
+        padding: 8px;
+        font-size: 1.2rem;
+    }
+
+    .submit-button, .restart-button {
+        padding: 10px 15px;
+        font-size: 1rem;
+        min-width: 150px;
+    }
+
+    /* Improved modal for mobile */
+    .modal-content {
+        padding: 20px 15px;
+        width: 95%;
+    }
+
+    .input-group {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 5px;
+        padding-bottom: 70px;
+    }
+    
+    .title {
+        font-size: 1.5rem;
+        margin-bottom: 10px;
+    }
+    
+    .grid-cell {
+        width: 28px;
+        height: 28px;
+        font-size: 12px;
+    }
+    
+    .grid-option {
+        padding: 12px 15px;
+        font-size: 1rem;
+        margin: 5px;
+    }
+
+    /* Full-width grid container on very small screens */
+    .grid-container {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Zoom controls for mobile */
+    .zoom-controls {
+        display: flex;
+        justify-content: center;
+        margin-top: 10px;
+        gap: 10px;
+    }
+
+    .zoom-button {
+        width: 40px;
+        height: 40px;
+        font-size: 1.5rem;
+        background: white;
+        border: 2px solid var(--border-color);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Even smaller modal for very small screens */
+    .modal-content {
+        padding: 15px 10px;
+        width: 95%;
+        max-width: 320px;
+        border-width: 4px;
+    }
+
+    .modal h2 {
+        font-size: 1.4rem;
+    }
+
+    .modal p {
+        font-size: 0.9rem;
+    }
+
+    #player-name {
+        font-size: 1.1rem;
+        width: 80px;
+    }
+
+    .submit-button, .restart-button {
+        padding: 8px 12px;
+        font-size: 0.9rem;
+        min-width: 120px;
+        margin: 8px auto;
+    }
+
+    .modal-leaderboard {
+        max-height: 150px;
+    }
+}
+
+/* Add a fixed bottom bar for mobile */
+.mobile-controls {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .mobile-controls {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        padding: 10px;
+        background-color: rgba(255, 255, 255, 0.9);
+        border-top: 2px solid var(--border-color);
+        justify-content: space-around;
+        align-items: center;
+        z-index: 100;
+    }
+
+    .mobile-control-button {
+        padding: 10px;
+        border: 2px solid var(--border-color);
+        border-radius: 8px;
+        background: white;
+        font-weight: bold;
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .mobile-help-button {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: white;
+        border: 2px solid var(--border-color);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+    }
+}

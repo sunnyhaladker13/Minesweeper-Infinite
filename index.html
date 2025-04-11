@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minesweeper Infinite</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 class="title">Minesweeper Infinite</h1>
+        </header>
+        
+        <!-- Main Menu -->
+        <div id="menu" class="menu">
+            <h2>Select Grid Size</h2>
+            <div class="grid-options">
+                <button data-size="20" class="grid-option">20 x 20</button>
+                <button data-size="50" class="grid-option">50 x 50</button>
+                <button data-size="100" class="grid-option">100 x 100</button>
+            </div>
+            
+            <div class="leaderboard-preview">
+                <h3>Top Scores</h3>
+                <div id="leaderboard-container">
+                    <ul id="leaderboard-list" class="leaderboard-list">
+                        <li class="loading">Loading leaderboard...</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="instructions">
+                <h3>How to Play</h3>
+                <ul>
+                    <li>Click to reveal a cell</li>
+                    <li>Right-click (or toggle Flag Mode on mobile) to place a flag</li>
+                    <li>Complete 10 increasingly difficult levels</li>
+                    <li>Don't hit any mines!</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Game Screen -->
+        <div id="game" class="game">
+            <div class="game-header">
+                <div id="level" class="level">Level: 1 of 10</div>
+                <div class="level-progress-container">
+                    <div id="level-progress" class="level-progress"></div>
+                </div>
+                <div id="timer" class="timer">Time: 00:00</div>
+            </div>
+            
+            <div id="flag-toggle" class="flag-toggle">Mode: Reveal 👆</div>
+            
+            <div class="grid-container">
+                <div id="grid" class="grid"></div>
+            </div>
+        </div>
+        
+        <!-- Game Over Modal -->
+        <div id="game-over-modal" class="modal">
+            <div class="modal-content">
+                <h2 id="modal-title">Game Over</h2>
+                <p id="modal-message">You hit a mine!</p>
+                <div class="score-submission">
+                    <p id="final-score">Final Score: Level 5/10 - Time: 01:23</p>
+                    <div class="input-group">
+                        <label for="player-name">Enter your 3-character name:</label>
+                        <input type="text" id="player-name" maxlength="3" pattern="[A-Za-z0-9]{3}" placeholder="AAA">
+                        <button id="submit-score" class="submit-button">Submit Score</button>
+                    </div>
+                </div>
+                
+                <div id="modal-leaderboard" class="modal-leaderboard">
+                    <h3>Leaderboard</h3>
+                    <!-- Leaderboard will be displayed here -->
+                </div>
+                
+                <button id="restart-game" class="restart-button">Play Again</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
