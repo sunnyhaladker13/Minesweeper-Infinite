@@ -462,8 +462,131 @@ h3 {
     margin-top: 1rem;
 }
 
+/* Main Menu Layout */
+.main-content {
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+    justify-content: space-between;
+    margin: 0 auto;
+    max-width: 100%;
+}
+
+.left-column, .right-column {
+    flex: 1;
+}
+
+/* Leaderboard styling */
+.leaderboard-preview {
+    background-color: white;
+    border: 3px solid var(--border-color);
+    box-shadow: var(--shadow-offset) var(--shadow-offset) 0 var(--border-color);
+    padding: 20px;
+    margin-bottom: 20px;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.leaderboard-list {
+    list-style: none;
+    padding: 0;
+}
+
+.leaderboard-list li {
+    display: flex;
+    padding: 8px 5px;
+    border-bottom: 1px solid #eee;
+    font-size: 0.9rem;
+}
+
+.leaderboard-list li.leaderboard-header {
+    font-weight: bold;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.leaderboard-list li.size-header {
+    background-color: #eee;
+    font-weight: bold;
+    padding: 5px;
+    margin-top: 5px;
+}
+
+.leaderboard-list li span {
+    flex: 1;
+    text-align: center;
+}
+
+.leaderboard-list .rank {
+    flex: 0.5;
+    font-weight: bold;
+}
+
+.leaderboard-list .name {
+    flex: 1;
+    font-weight: bold;
+}
+
+.leaderboard-list .grid {
+    flex: 1;
+}
+
+.leaderboard-list .level {
+    flex: 1;
+}
+
+.leaderboard-list .time {
+    flex: 1;
+}
+
+/* Footer styling */
+.footer {
+    margin-top: 40px;
+    text-align: center;
+    padding: 15px 0;
+    border-top: 2px solid var(--border-color);
+    color: var(--text-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.footer p {
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+}
+
+.linkedin-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 15px;
+    background-color: #0077b5;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: bold;
+    border: 2px solid #005582;
+    transition: all 0.2s ease;
+}
+
+.linkedin-button svg {
+    width: 20px;
+    height: 20px;
+}
+
+.linkedin-button:hover {
+    background-color: #005582;
+    transform: translateY(-2px);
+}
+
 /* Responsive Styles */
 @media (max-width: 768px) {
+    .main-content {
+        flex-direction: column;
+        gap: 20px;
+    }
+
     .title {
         font-size: 2rem;
         padding: 10px;
@@ -549,6 +672,11 @@ h3 {
         padding: 10px 15px;
         font-size: 1rem;
         min-width: 150px;
+    }
+
+    .leaderboard-list li {
+        font-size: 0.8rem;
+        padding: 6px 3px;
     }
 
     /* Improved modal for mobile */

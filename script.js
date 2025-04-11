@@ -541,24 +541,36 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Display top scores
         const gridSizes = Object.keys(leaderboardBySize).sort((a, b) => a - b);
+        
+        // Create an overall top 10 leaderboard that combines all grid sizes
+        const allScores = [];
         gridSizes.forEach(size => {
-            const sizeHeader = document.createElement('li');
-            sizeHeader.classList.add('size-header');
-            sizeHeader.textContent = `${size}x${size} Grid`;
-            leaderboardList.appendChild(sizeHeader);
-            
-            // Get top 3 for each grid size
-            leaderboardBySize[size].slice(0, 3).forEach((entry, index) => {
-                const li = document.createElement('li');
-                li.innerHTML = `
-                    <span class="rank">${index + 1}</span>
-                    <span class="name">${entry.name}</span>
-                    <span class="grid">${entry.gridSize}x${entry.gridSize}</span>
-                    <span class="level">${entry.level}/10</span>
-                    <span class="time">${formatTime(entry.totalTime)}</span>
-                `;
-                leaderboardList.appendChild(li);
+            leaderboardBySize[size].forEach(entry => {
+                allScores.push(entry);
             });
+        });
+        
+        // Sort all scores the same way we sort individual grid sizes
+        allScores.sort((a, b) => {
+            if (a.completed !== b.completed) return b.completed - a.completed;
+            if (a.level !== b.level) return b.level - a.level;
+            return a.totalTime - b.totalTime;
+        });
+        
+        // Get top 10 overall scores
+        const top10Scores = allScores.slice(0, 10);
+        
+        // Display top 10 combined scores
+        top10Scores.forEach((entry, index) => {
+            const li = document.createElement('li');
+            li.innerHTML = `
+                <span class="rank">${index + 1}</span>
+                <span class="name">${entry.name}</span>
+                <span class="grid">${entry.gridSize}x${entry.gridSize}</span>
+                <span class="level">${entry.level}/10</span>
+                <span class="time">${formatTime(entry.totalTime)}</span>
+            `;
+            leaderboardList.appendChild(li);
         });
         
         leaderboardContainer.style.display = 'block';
