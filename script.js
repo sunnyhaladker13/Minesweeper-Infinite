@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Google Sheet Web App URL - replace with your deployed web app URL
-    const LEADERBOARD_API_URL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec';
+    const LEADERBOARD_API_URL = 'https://script.google.com/macros/s/AKfycbx6of-28KEbz3dYFsePXFCrn-7YaS2WvJvJ1Pc02Qsz9OWIiS4nHshxKpDaPP2kEBPq/exec';
 
     let gridSize = 20;
     let level = 1;
